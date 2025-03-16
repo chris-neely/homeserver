@@ -11,6 +11,8 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
 
 ### Image Modifications
 - [_lxc_/incus](https://github.com/lxc/incus) is a modern, secure and powerful system container and virtual machine manager.
+  > [!TIP]
+  > Initialize Incus and configure System Firewall
   - Run `incus admin init` to start configuration. https://linuxcontainers.org/incus/docs/main/howto/initialize/
   - Add default incus bridge to the firewall (only use if you used default):
     ```
@@ -18,7 +20,9 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
     sudo firewall-cmd --reload
     ```
 - [_bketelsen_/inventory](https://github.com/bketelsen/inventory) is an application that tracks deployed services/containers. It was built with a homelab in mind.
-  - Server is configured to run on port 8000 and receive rpc from client on port 9000.
+  > [!TIP]
+  > Server is configured to run on port 8000 and receive rpc from client on port 9999.
+  > Configure System Firewall to allow port 8000 (and 9999 if external services are reporting in).
   - Add inventory-server to the firewall:
     ```
     sudo firewall-cmd --zone=FedoraServer --add-port=8000/tcp --permanent
