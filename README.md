@@ -35,7 +35,7 @@ In addition to default [ucore-minimal](#ucore-minimal) applications and services
 
 ##### inventory
 > [!TIP]
-> Server is configured to run on port 8000 and receive rpc from client on port 9999.
+> The inventory server is configured to run on port 8000 and receive rpc from client on port 9999.
 > Configure System Firewall to allow port 8000 (and 9999 if external services are reporting in).
 
   - Add inventory-server to the firewall:
