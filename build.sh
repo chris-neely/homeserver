@@ -5,6 +5,8 @@ set -ouex pipefail
 ### COPY SYSTEM FILES
 
 rsync -rvK /tmp/system_files/ /
+chmod 755 /usr/libexec/homeserver-groups
+chmod +x /usr/libexec/homeserver-groups
 
 ### INSTALL PACKAGES
 
@@ -24,9 +26,10 @@ sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -
 mkdir -p /etc/inventory
 tee /etc/inventory/inventory <<'EOF'
 server:
-  address: "127.0.0.1:9999"
+  address: "127.0.0.1:8000"
 verbose: false
 EOF
+chmod 755 /etc/inventory/inventory
 
 # Inventory Service
 tee /etc/systemd/system/inventory-server.service <<'EOF'
@@ -70,6 +73,7 @@ tee /etc/logrotate.d/inventory <<'EOF'
 EOF
 chmod 644 /etc/logrotate.d/inventory
 chown root:root /etc/logrotate.d/inventory
+firewall-cmd --permanent --zone=FedoraServer --add-port=8000/tcp
 
 ### ENABLE SERVICES
 
