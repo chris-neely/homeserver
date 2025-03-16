@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# SCRIPT VERSION
+GROUP_SETUP_VER=1
+mkdir -p /etc/ublue
+GROUP_SETUP_VER_FILE="/etc/ublue/homeserver-groups" 
+GROUP_SETUP_VER_RAN=$(cat "$GROUP_SETUP_VER_FILE")
+
+# Run script if updated
+if [[ -f $GROUP_SETUP_VER_FILE && "$GROUP_SETUP_VER" = "$GROUP_SETUP_VER_RAN" ]]; then
+  echo "Group setup has already run. Exiting..."
+  exit 0
+fi
+
+# Setup Groups
+wheelarray=($(getent group wheel | cut -d ":" -f 4 | tr  ',' '\n'))
+for user in $wheelarray
+do
+  usermod -aG docker $user
+  usermod -aG incus-admin $user
+#  usermod -aG libvirt $user
+done
+
+# https://github.com/bketelsen/homer/blob/main/system_files/dx/usr/libexec/bluefin-incus
+# https://discuss.linuxcontainers.org/t/incus-no-uid-gid-allocation-configured/19002/2
+
+# check for, then add necessary entries to /etc/subuid and /etc/subgid
+echo ""
+echo "Checking for necessary entries in /etc/subuid and /etc/subgid"
+if grep -q "root:1000000:1000000000" /etc/subuid
+then
+    echo ""
+    echo "  * subuid root range"
+else
+    echo "root:1000000:1000000000" | sudo tee -a /etc/subuid
+fi
+
+if grep -q "root:1000000:1000000000" /etc/subgid
+then
+    echo ""
+    echo "  * subgid root range"
+else
+    echo "root:1000000:1000000000" | sudo tee -a /etc/subgid
+fi
+
+if grep -q "root:$UID:1" /etc/subgid
+then
+    echo ""
+    echo "  * subgid root->user"
+else
+    echo "root:$UID:1" | sudo tee -a /etc/subgid
+fi
+
+if grep -q "root:$UID:1" /etc/subuid
+then
+    echo ""
+    echo "  * subuid root->user"
+else
+    echo "root:$UID:1" | sudo tee -a /etc/subuid
+fi
+
+# Prevent future executions
+echo "Writing state file"
+echo "$GROUP_SETUP_VER" > "$GROUP_SETUP_VER_FILE"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Add wheel members to docker, incus-admin
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/homeserver-groups
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=0
+
+[Install]
+WantedBy=default.target
