@@ -13,12 +13,9 @@ FROM ghcr.io/ublue-os/ucore-minimal:stable-nvidia-zfs
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
-COPY build_files/ /tmp/build_files/
+COPY build* /tmp/
 COPY system_files/ /tmp/system_files/
 
 RUN mkdir -p /var/lib/alternatives && \
-    /tmp/build_files/build.sh && \
-    /tmp/build_files/install-packages.sh && \
-    /tmp/build_files/install-inventory.sh && \
-    /tmp/build_files/systemd.sh && \
+    /tmp/build.sh && \
     ostree container commit
