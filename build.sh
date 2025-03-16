@@ -24,7 +24,7 @@ dnf5 -y install "${PACKAGES[@]}"
 ### Configure Incus
 # https://github.com/bketelsen/homer/blob/main/system_files/dx/usr/libexec/bluefin-incus
 # https://discuss.linuxcontainers.org/t/incus-no-uid-gid-allocation-configured/19002/2
-sudo usermod -aG incus-admin core
+usermod -aG incus-admin core
 
 echo ""
 echo "Checking for necessary entries in /etc/subuid and /etc/subgid"
@@ -33,7 +33,7 @@ then
     echo ""
     echo "  * subuid root range"
 else
-    echo "root:1000000:1000000000" | sudo tee -a /etc/subuid
+    echo "root:1000000:1000000000" | tee -a /etc/subuid
 fi
 
 if grep -q "root:1000000:1000000000" /etc/subgid
@@ -41,7 +41,7 @@ then
     echo ""
     echo "  * subgid root range"
 else
-    echo "root:1000000:1000000000" | sudo tee -a /etc/subgid
+    echo "root:1000000:1000000000" | tee -a /etc/subgid
 fi
 
 if grep -q "root:$UID:1" /etc/subgid
@@ -49,7 +49,7 @@ then
     echo ""
     echo "  * subgid root->user"
 else
-    echo "root:$UID:1" | sudo tee -a /etc/subgid
+    echo "root:$UID:1" | tee -a /etc/subgid
 fi
 
 if grep -q "root:$UID:1" /etc/subuid
@@ -57,7 +57,7 @@ then
     echo ""
     echo "  * subuid root->user"
 else
-    echo "root:$UID:1" | sudo tee -a /etc/subuid
+    echo "root:$UID:1" | tee -a /etc/subuid
 fi
 
 ### Install Inventory
@@ -126,9 +126,9 @@ chown root.root /etc/logrotate.d/inventory
 #### Example for enabling a System Unit File
 
 # systemctl enable podman.socket
-sudo systemctl enable --now inventory-server.service
-sudo systemctl enable --now crond.service
-sudo systemctl enable --now lxcfs
-sudo systemctl enable --now incus.socket
-sudo systemctl enable --now incus.service
-sudo systemctl enable --now incus-startup
+systemctl enable --now inventory-server.service
+systemctl enable --now crond.service
+systemctl enable --now lxcfs
+systemctl enable --now incus.socket
+systemctl enable --now incus.service
+systemctl enable --now incus-startup
