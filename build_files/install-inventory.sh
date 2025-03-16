@@ -2,21 +2,6 @@
 
 set -ouex pipefail
 
-### COPY SYSTEM FILES
-
-rsync -rvK /tmp/system_files/ /
-chmod 755 /usr/libexec/homeserver-groups
-chmod +x /usr/libexec/homeserver-groups
-
-### INSTALL PACKAGES
-
-PACKAGES=(
-    incus
-    cronie
-)
-
-dnf5 -y install "${PACKAGES[@]}"
-
 ### INSTALL INVENTORY
 # https://bketelsen.github.io/inventory/docs/installation/#installer-script 
 sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -d -b /usr/bin
@@ -73,17 +58,3 @@ tee /etc/logrotate.d/inventory <<'EOF'
 EOF
 chmod 644 /etc/logrotate.d/inventory
 chown root:root /etc/logrotate.d/inventory
-
-### ENABLE SERVICES
-
-systemctl enable homeserver-groups.service
-systemctl enable tailscaled.service
-systemctl enable inventory-server.service
-systemctl enable crond.service
-systemctl enable lxcfs
-systemctl enable incus.socket
-systemctl enable incus.service
-systemctl enable incus-startup
-systemctl enable docker.service
-systemctl enable docker.socket
-systemctl enable cockpit.service
