@@ -19,9 +19,9 @@ dnf5 -y install "${PACKAGES[@]}"
 
 ### INSTALL INVENTORY
 # https://bketelsen.github.io/inventory/docs/installation/#installer-script 
-sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -d -b /usr/local/bin
+sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -d -b /usr/bin
 
-# Inventory Config File
+# Inventory Client Config File
 # https://github.com/bketelsen/inventory/blob/main/README.md
 mkdir -p /etc/inventory
 tee /etc/inventory/inventory <<'EOF'
@@ -31,7 +31,7 @@ verbose: false
 EOF
 chmod 755 /etc/inventory/inventory
 
-# Inventory Service
+# Inventory Server Service
 tee /etc/systemd/system/inventory-server.service <<'EOF'
 [Unit]
 Description=Inventory Server
@@ -46,7 +46,7 @@ RestartSec=30
 TimeoutStartSec=0
 
 WorkingDirectory=/var/home/core
-ExecStart=/usr/local/bin/inventory serve
+ExecStart=/usr/bin/inventory serve
 User=core
 Group=core
 NoNewPrivileges=true
@@ -57,7 +57,7 @@ EOF
 
 # Inventory CRON Job
 # https://bketelsen.github.io/inventory/docs/cli/inventory_send/
-echo "*/2 * * * * root /usr/local/bin/inventory send >> /var/log/inventory.log 2>&1" >> /etc/crontab
+echo "*/2 * * * * root /usr/bin/inventory send >> /var/log/inventory.log 2>&1" >> /etc/crontab
 
 # Inventory Log Rotation
 tee /etc/logrotate.d/inventory <<'EOF'
@@ -86,3 +86,4 @@ systemctl enable incus.service
 systemctl enable incus-startup
 systemctl enable docker.service
 systemctl enable docker.socket
+systemctl enable cockpit.service
