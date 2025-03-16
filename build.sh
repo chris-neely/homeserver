@@ -21,14 +21,53 @@ PACKAGES=(
 # Install Packages
 dnf5 -y install "${PACKAGES[@]}"
 
-# Install Inventory
+### Configure Incus
+# https://github.com/bketelsen/homer/blob/main/system_files/dx/usr/libexec/bluefin-incus
+# https://discuss.linuxcontainers.org/t/incus-no-uid-gid-allocation-configured/19002/2
+sudo usermod -aG incus-admin core
+
+echo ""
+echo "Checking for necessary entries in /etc/subuid and /etc/subgid"
+if grep -q "root:1000000:1000000000" /etc/subuid
+then
+    echo ""
+    echo "  * subuid root range"
+else
+    echo "root:1000000:1000000000" | sudo tee -a /etc/subuid
+fi
+
+if grep -q "root:1000000:1000000000" /etc/subgid
+then
+    echo ""
+    echo "  * subgid root range"
+else
+    echo "root:1000000:1000000000" | sudo tee -a /etc/subgid
+fi
+
+if grep -q "root:$UID:1" /etc/subgid
+then
+    echo ""
+    echo "  * subgid root->user"
+else
+    echo "root:$UID:1" | sudo tee -a /etc/subgid
+fi
+
+if grep -q "root:$UID:1" /etc/subuid
+then
+    echo ""
+    echo "  * subuid root->user"
+else
+    echo "root:$UID:1" | sudo tee -a /etc/subuid
+fi
+
+### Install Inventory
 # https://bketelsen.github.io/inventory/docs/installation/#installer-script 
 sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -d -b /usr/local/bin
 
 # Inventory Config File
 # https://github.com/bketelsen/inventory/blob/main/README.md
-mkdir -p ~/.inventory
-tee ~/.inventory/inventory <<'EOF'
+mkdir -p /etc/inventory
+tee /etc/inventory/inventory <<'EOF'
 server:
   address: "127.0.0.1:9999"
 verbose: false
@@ -58,10 +97,24 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 EOF
 
-#Inventory CRON Job
+# Inventory CRON Job
 # https://bketelsen.github.io/inventory/docs/cli/inventory_send/
-echo "*/2 * * * * /usr/local/bin/inventory send  >> /var/log/inventory.log 2>&1" >> /etc/crontab
+echo "*/2 * * * * root /usr/local/bin/inventory send >> /var/log/inventory.log 2>&1" >> /etc/crontab
 
+# Inventory Log Rotation
+tee /etc/logrotate.d/inventory <<'EOF'
+/var/log/inventory.log {
+       copytruncate
+       daily
+       rotate 7
+       delaycompress
+       compress
+       notifempty
+       missingok
+}
+EOF
+chmod 644 /etc/logrotate.d/inventory
+chown root.root /etc/logrotate.d/inventory
 
 ## Use a COPR Example:
 #
@@ -73,5 +126,9 @@ echo "*/2 * * * * /usr/local/bin/inventory send  >> /var/log/inventory.log 2>&1"
 #### Example for enabling a System Unit File
 
 # systemctl enable podman.socket
-systemctl enable inventory-server.service
-systemctl enable crond.service
+sudo systemctl enable --now inventory-server.service
+sudo systemctl enable --now crond.service
+sudo systemctl enable --now lxcfs
+sudo systemctl enable --now incus.socket
+sudo systemctl enable --now incus.service
+sudo systemctl enable --now incus-startup

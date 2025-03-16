@@ -7,6 +7,7 @@ My custom [ucore](https://github.com/ublue-os/ucore) homeserver image generated 
 
 # Image modification
 - [_lxc_/incus](https://github.com/lxc/incus) is a modern, secure and powerful system container and virtual machine manager.
+  - run `incus admin init` to start configuration. https://linuxcontainers.org/incus/docs/main/howto/initialize/
 - [_bketelsen_/inventory](https://github.com/bketelsen/inventory) is an application that tracks deployed services/containers. It was built with a homelab in mind.
 
 # Base Image
