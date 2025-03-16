@@ -26,7 +26,7 @@ sh -c "$(curl --location https://bketelsen.github.io/inventory/install.sh)" -- -
 mkdir -p /etc/inventory
 tee /etc/inventory/inventory <<'EOF'
 server:
-  address: "127.0.0.1:8000"
+  address: "127.0.0.1:9999"
 verbose: false
 EOF
 chmod 755 /etc/inventory/inventory
