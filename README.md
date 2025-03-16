@@ -21,7 +21,7 @@ In addition to default [ucore-minimal](#ucore-minimal) applications and services
 
 #### Configuration Tips & Tricks
 
-- incus
+##### incus
 > [!TIP]
 > Initialize Incus and configure System Firewall
 
@@ -31,8 +31,9 @@ In addition to default [ucore-minimal](#ucore-minimal) applications and services
     sudo firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
     sudo firewall-cmd --reload
     ```
+-----
 
-- inventory
+##### inventory
 > [!TIP]
 > Server is configured to run on port 8000 and receive rpc from client on port 9999.
 > Configure System Firewall to allow port 8000 (and 9999 if external services are reporting in).
@@ -47,13 +48,15 @@ In addition to default [ucore-minimal](#ucore-minimal) applications and services
     sudo firewall-cmd --zone=FedoraServer --add-port=9999/tcp --permanent
     sudo firewall-cmd --reload
     ```
+-----
 
-- tailscale
+##### tailscale
 > [!TIP]
 > Tailscale is configured to be enabled by default in this image. Disable if you wont be using or configure it if you will be using.
 
   - Run `sudo tailscale up --operator=$USER` to configure tailscale.
   - Run `sudo systemctl disable tailscaled.service` to disable the service. 
+-----
 
 ### Source Image Details
 The source image for [homeserver](#homeserver) is [ublue-os/ucore-minimal:stable-nvidia-zfs](https://github.com/ublue-os/ucore?tab=readme-ov-file#tag-matrix). Details from the [uCore readme](https://github.com/ublue-os/ucore/blob/main/README.md) provided below.
