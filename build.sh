@@ -73,7 +73,6 @@ tee /etc/logrotate.d/inventory <<'EOF'
 EOF
 chmod 644 /etc/logrotate.d/inventory
 chown root:root /etc/logrotate.d/inventory
-firewall-cmd --permanent --zone=FedoraServer --add-port=8000/tcp
 
 ### ENABLE SERVICES
 

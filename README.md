@@ -9,8 +9,19 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
 
 # Image modification
 - [_lxc_/incus](https://github.com/lxc/incus) is a modern, secure and powerful system container and virtual machine manager.
-  - run `incus admin init` to start configuration. https://linuxcontainers.org/incus/docs/main/howto/initialize/
+  - Run `incus admin init` to start configuration. https://linuxcontainers.org/incus/docs/main/howto/initialize/
+  - Add incus bridge to the firewall:
+    ```
+    sudo firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
+    sudo firewall-cmd --reload
+    ```
 - [_bketelsen_/inventory](https://github.com/bketelsen/inventory) is an application that tracks deployed services/containers. It was built with a homelab in mind.
+  - Configured to run on port 8000.
+  - Add inventory-server to the firewall:
+    ```
+    sudo firewall-cmd --zone=FedoraServer --add-port=8000/tcp --permanent
+    sudo firewall-cmd --reload
+    ```
 
 # Source Image
 - [ucore/ucore-minimal:stable-nvidia-zfs](https://github.com/ublue-os/ucore?tab=readme-ov-file#tag-matrix)
@@ -40,11 +51,13 @@ Suitable for running containerized workloads on either bare metal or virtual mac
 - Adds the following:
   - [bootc](https://github.com/containers/bootc) (new way to update container native systems)
   - [cockpit](https://cockpit-project.org) (podman container and system management)
+    - Configured to run on port 9090
   - [firewalld](https://firewalld.org/)
   - guest VM agents (`qemu-guest-agent` and `open-vm-tools`))
   - [docker-buildx](https://github.com/docker/buildx) and [docker-compose](https://github.com/docker/compose) (versions matched to moby release) *docker(moby-engine) is pre-installed in CoreOS*
   - [podman-compose](https://github.com/containers/podman-compose) *podman is pre-installed in CoreOS*
   - [tailscale](https://tailscale.com) and [wireguard-tools](https://www.wireguard.com)
+    - Run `sudo tailscale up --operator=$USER`
   - [tmux](https://github.com/tmux/tmux/wiki/Getting-Started)
   - udev rules enabling full functionality on some [Realtek 2.5Gbit USB Ethernet](https://github.com/wget/realtek-r8152-linux/) devices
 - Optional [nvidia versions](#tag-matrix) add:
