@@ -11,11 +11,16 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
 
 ### Image Modifications
 
-#### Installed Applications (in addition to ucore-minimal)
+#### Installed Applications
+
+In addition to default [ucore-minimal](#ucore-minimal) applications and services. The following modifications have been included in homeserver.
+
 - [_lxc_/incus](https://github.com/lxc/incus) is a modern, secure and powerful system container and virtual machine manager.
+
 - [_bketelsen_/inventory](https://github.com/bketelsen/inventory) is an application that tracks deployed services/containers. It was built with a homelab in mind.
 
 #### Configuration Tips & Tricks
+
 - incus
   > [!TIP]
   > Initialize Incus and configure System Firewall
@@ -25,6 +30,7 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
     sudo firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
     sudo firewall-cmd --reload
     ```
+
 - inventory
   > [!TIP]
   > Server is configured to run on port 8000 and receive rpc from client on port 9999.
@@ -39,6 +45,7 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
     sudo firewall-cmd --zone=FedoraServer --add-port=9999/tcp --permanent
     sudo firewall-cmd --reload
     ```
+
 - tailscale
   > [!TIP]
   > Tailscale is configured to be enabled by default in this image. Disable if you wont be using or configure it if you will be using.
@@ -46,7 +53,7 @@ Special thanks to [bketelsen](https://github.com/bketelsen) for [inspiring and s
   - Run `sudo systemctl disable tailscaled.service` to disable the service. 
 
 ### Source Image Details
-- [ublue-os/ucore-minimal:stable-nvidia-zfs](https://github.com/ublue-os/ucore?tab=readme-ov-file#tag-matrix)
+The source image for [homeserver](#homeserver) is [ublue-os/ucore-minimal:stable-nvidia-zfs](https://github.com/ublue-os/ucore?tab=readme-ov-file#tag-matrix). Details from the [uCore readme](https://github.com/ublue-os/ucore/blob/main/README.md) provided below.
 
 #### `fedora-coreos`
 
