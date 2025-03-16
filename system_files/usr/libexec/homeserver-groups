@@ -16,10 +16,10 @@ fi
 wheelarray=($(getent group wheel | cut -d ":" -f 4 | tr  ',' '\n'))
 for user in $wheelarray
 do
-  usermod -aG docker $USER
-  usermod -aG incus $USER
-  usermod -aG incus-admin $USER
-  usermod -aG libvirt $USER
+  usermod -aG docker core
+  usermod -aG incus core
+  usermod -aG incus-admin core
+  usermod -aG libvirt core
 done
 
 # https://github.com/bketelsen/homer/blob/main/system_files/dx/usr/libexec/bluefin-incus
