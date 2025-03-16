@@ -18,4 +18,7 @@ COPY system_files/ /tmp/system_files/
 
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build_files/build.sh && \
+    /tmp/build_files/install-packages.sh && \
+    /tmp/build_files/install-inventory.sh && \
+    /tmp/build_files/systemd.sh && \
     ostree container commit
