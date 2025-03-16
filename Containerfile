@@ -1,4 +1,4 @@
-FROM ghcr.io/ublue-os/fedora-coreos:stable-nvidia-zfs
+FROM ghcr.io/ublue-os/ucore-minimal:stable-nvidia-zfs
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
