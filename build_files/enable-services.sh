@@ -12,6 +12,6 @@ systemctl enable lxcfs
 systemctl enable incus.socket
 systemctl enable incus.service
 systemctl enable incus-startup
-systemctl enable docker.service
-systemctl enable docker.socket
+#systemctl enable docker.service
+#systemctl enable docker.socket
 systemctl enable cockpit.service
